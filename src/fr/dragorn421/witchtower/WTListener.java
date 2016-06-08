@@ -14,8 +14,10 @@ public class WTListener implements Listener
 	{
 		if(e.hasItem() && e.getItem().getType() == Material.MAGMA_CREAM)
 		{
+			// left click
 			if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK)
 				e.getPlayer().chat("/witchtower shoot");
+			// right click
 			if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
 				e.getPlayer().chat("/witchtower projectile");
 		}

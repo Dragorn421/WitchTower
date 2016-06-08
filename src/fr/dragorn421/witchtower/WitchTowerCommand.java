@@ -1,13 +1,9 @@
 package fr.dragorn421.witchtower;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,13 +39,6 @@ public class WitchTowerCommand implements CommandExecutor
 				p = (Player) sender;
 				wtp = new WTProjectile(p.getLocation());
 				wtp.setFollow(p);
-				Bukkit.getScheduler().runTaskLater(WitchTowerPlugin.get(), new Runnable(){
-					@Override
-					public void run()
-					{
-						//wtp.remove();
-					}
-				}, 200L);
 				return true;
 			case "shoot":
 				if(!(sender instanceof Player))
@@ -64,19 +53,13 @@ public class WitchTowerCommand implements CommandExecutor
 					p.sendMessage("You need to look at a block");
 					return true;
 				}
+				// search for nearby entities: if none, makes the projectile go in a straight line
 				final Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 5, 5, 5);
 				wtp = new WTProjectile(p.getLocation());
 				if(nearby.size() == 0)
 					wtp.setDirection(p.getLocation().getDirection());
 				else
 					wtp.setFollow(nearby.iterator().next());
-				Bukkit.getScheduler().runTaskLater(WitchTowerPlugin.get(), new Runnable(){
-					@Override
-					public void run()
-					{
-						//wtp.remove();
-					}
-				}, 200L);
 				return true;
 			case "tower":
 				if(!(sender instanceof Player))
@@ -91,7 +74,8 @@ public class WitchTowerCommand implements CommandExecutor
 					p.sendMessage("You need to look at a block");
 					return true;
 				}
-				final WitchTowerParameters params = WitchTowerParameters.DEFAULT;
+				final WitchTowerParameters params = WitchTowerParameters.DEFAULT;//TODO allow custom parameters
+				// so that the tower center is at the pointed block
 				loc.add(-params.baseSize/2D, 1D, -params.baseSize/2D);
 				final long start = System.nanoTime();
 				witchTower = new WitchTower(loc, params, false);
@@ -99,7 +83,7 @@ public class WitchTowerCommand implements CommandExecutor
 				witchTower.build();
 				id = WTManager.get().registerTower(witchTower);
 				sender.sendMessage("#" + id + " done (" + (end - start)/1000000D + "ms)");
-				witchTower.getTop().getBlock().setType(Material.GLOWSTONE);
+				witchTower.getTop().getBlock().setType(Material.GLOWSTONE);// debug
 				return true;
 			case "witch":
 				try {
@@ -109,6 +93,7 @@ public class WitchTowerCommand implements CommandExecutor
 				}
 				witchTower = WTManager.get().getTower(id);
 				new WitchBoss(witchTower.getTop());
+				//TODO
 				return true;
 			}
 		}

@@ -6,18 +6,48 @@ public class WitchTowerParameters
 	static enum Shape
 	{
 
+		/**
+		 * A line
+		 * eye -> |
+		 */
 		STRAIGHT,
+		/**
+		 * Curved
+		 * eye -> )
+		 */
 		CONCAVE,
+		/**
+		 * Curved
+		 * eye -> (
+		 */
 		CONVEX;
 
 	}
 
+	/**
+	 * Default generation parameters
+	 */
 	final static public WitchTowerParameters DEFAULT = new WitchTowerParameters().height(150).baseSize(60).topSize(8).layerNoise(1).shape(Shape.CONCAVE);
 
+	/**
+	 * The number of layers
+	 */
 	public int height;
+	/**
+	 * The width/length of the base = bottom layer
+	 */
 	public int baseSize;
+	/**
+	 * The width/length of the top = top layer
+	 */
 	public int topSize;
+	/**
+	 * In which range varies the x and z offset for each layer
+	 */
 	public double layerNoise;
+	/**
+	 * The shape
+	 */
 	public Shape shape;
 
 	public WitchTowerParameters height(final int height)

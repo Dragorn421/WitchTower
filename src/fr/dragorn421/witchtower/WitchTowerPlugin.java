@@ -31,7 +31,8 @@ public class WitchTowerPlugin extends JavaPlugin// implements Listener
 			}, 0L);
 			throw new IllegalStateException("Unable to load configuration.", e);
 		}
-		WTManager.get();//load class so there is no error on disable if manager wasnt used
+		//load WTManager class so there is no error on disable if manager wasn't used
+		WTManager.get();
 		Bukkit.getPluginCommand("witchtower").setExecutor(new WitchTowerCommand());
 		Bukkit.getPluginManager().registerEvents(new WTListener(), this);
 		super.getLogger().info(super.getName() + " enabled!");

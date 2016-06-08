@@ -20,18 +20,29 @@ public class WTManager
 		this.nextTowerId = 0;
 	}
 
+	/**
+	 * Registers a tower.
+	 * @param tower
+	 * @return id of registered tower.
+	 */
 	public int registerTower(final WitchTower tower)
 	{
 		this.towers.put(this.nextTowerId, tower);
 		return this.nextTowerId++;
 	}
 
+	/**
+	 * @param id Tower id
+	 * @return Corresponding {@link WitchTower}, null if none
+	 */
 	public WitchTower getTower(final int id)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.towers.get(id);
 	}
 
+	/**
+	 * Destroy all towers.
+	 */
 	public void clear()
 	{
 		for(final WitchTower t : this.towers.values())

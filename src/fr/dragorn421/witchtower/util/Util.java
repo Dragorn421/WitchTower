@@ -14,6 +14,10 @@ public class Util
 
 	final static public Random RANDOM = new Random(System.currentTimeMillis() + 421);
 
+	/**
+	 * @param p
+	 * @return Location of looked at block, null if no block found.
+	 */
 	static public Location getLookedAt(final Player p)
 	{
 		final Set<Material> transparent = null;
