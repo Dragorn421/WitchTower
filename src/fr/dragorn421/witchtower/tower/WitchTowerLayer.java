@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.material.MaterialData;
 
+import fr.dragorn421.witchtower.WitchTowerPlugin;
 import fr.dragorn421.witchtower.util.Util;
 
 public class WitchTowerLayer
@@ -97,9 +98,10 @@ public class WitchTowerLayer
 	 * Build the layer at the given location.
 	 * @param from Minimum corner where to build the layer
 	 * @param replaceByAir Change block even if corresponding one in layer is air
+	 * @param tower The tower that this layer is in
 	 */
 	@SuppressWarnings("deprecation")
-	public void build(final Location from, final boolean replaceByAir)
+	public void build(final Location from, final boolean replaceByAir, final WitchTower tower)
 	{
 		final Location loc = from.clone();
 		loc.setX(from.getX() + this.offsetX);
@@ -120,6 +122,7 @@ public class WitchTowerLayer
 					b.setType(m.getItemType());
 					b.setData(m.getData());
 				}
+				Util.setMetadata(b, WitchTowerPlugin.BLOCK_BELONGS_TO_TOWER, tower);
 				loc.setZ(loc.getZ() + 1);
 			}
 			loc.setX(loc.getX() + 1);
@@ -152,6 +155,7 @@ public class WitchTowerLayer
 				{
 					b.setType(Material.AIR);
 				}
+				Util.setMetadata(b, WitchTowerPlugin.BLOCK_BELONGS_TO_TOWER, null);
 				loc.setZ(loc.getZ() + 1);
 			}
 			loc.setX(loc.getX() + 1);

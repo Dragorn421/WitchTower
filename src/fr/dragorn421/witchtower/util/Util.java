@@ -8,6 +8,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
+
+import fr.dragorn421.witchtower.WitchTowerPlugin;
 
 public class Util
 {
@@ -30,6 +35,25 @@ public class Util
 				break;
 			}
 		return loc;
+	}
+
+	@SuppressWarnings("unchecked")
+	final static public <T> T getMetadata(final Metadatable from, final String key, final Class<T> clazz)
+	{
+		for(final MetadataValue v : from.getMetadata(key))
+		{
+			if(v.getOwningPlugin() == WitchTowerPlugin.get() && clazz.isAssignableFrom(v.value().getClass()))
+				return (T) v.value();
+		}
+		return null;
+	}
+
+	final static public void setMetadata(final Metadatable to, final String key, final Object value)
+	{
+		if(value == null)
+			to.removeMetadata(key, WitchTowerPlugin.get());
+		else
+			to.setMetadata(key, new FixedMetadataValue(WitchTowerPlugin.get(), value));
 	}
 
 }

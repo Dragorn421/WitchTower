@@ -89,7 +89,7 @@ public class WitchTower
 		final Location loc = this.location.clone();
 		for(int i=0;i<this.layers.size();i++)
 		{
-			this.layers.get(i).build(loc, true);
+			this.layers.get(i).build(loc, true, this);
 			loc.setY(loc.getY() + 1);
 		}
 	}

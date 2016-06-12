@@ -8,8 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import fr.dragorn421.witchtower.util.YAMLConfigHandler;
 
-public class WitchTowerPlugin extends JavaPlugin// implements Listener
+public class WitchTowerPlugin extends JavaPlugin
 {
+
+	final static public String BLOCK_BELONGS_TO_TOWER = "witchtower_block_in_tower_metadatakey";
 
 	static private WitchTowerPlugin instance;
 
