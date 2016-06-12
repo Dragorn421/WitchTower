@@ -55,11 +55,17 @@ public class WitchTowerCommand implements CommandExecutor
 				}
 				// search for nearby entities: if none, makes the projectile go in a straight line
 				final Collection<Entity> nearby = loc.getWorld().getNearbyEntities(loc, 5, 5, 5);
+				Entity follow = null;
+				for(final Entity e : nearby)
+				{
+					if(e != p)
+						follow = e;
+				}
 				wtp = new WTProjectile(p.getLocation());
-				if(nearby.size() == 0)
+				if(follow == null)
 					wtp.setDirection(p.getLocation().getDirection());
 				else
-					wtp.setFollow(nearby.iterator().next());
+					wtp.setFollow(follow);
 				return true;
 			case "tower":
 				if(!(sender instanceof Player))
