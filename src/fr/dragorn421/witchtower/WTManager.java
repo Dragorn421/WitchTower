@@ -46,7 +46,7 @@ public class WTManager
 	public void clear()
 	{
 		for(final WitchTower t : this.towers.values())
-			t.delete();
+			t.delete(true);
 		this.towers.clear();
 	}
 

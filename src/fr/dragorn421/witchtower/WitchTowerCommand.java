@@ -80,7 +80,7 @@ public class WitchTowerCommand implements CommandExecutor
 				final long start = System.nanoTime();
 				witchTower = new WitchTower(loc, params, false);
 				final long end = System.nanoTime();
-				witchTower.build();
+				witchTower.build(true);
 				id = WTManager.get().registerTower(witchTower);
 				sender.sendMessage("#" + id + " done (" + (end - start)/1000000D + "ms)");
 				witchTower.getTop().getBlock().setType(Material.GLOWSTONE);// debug

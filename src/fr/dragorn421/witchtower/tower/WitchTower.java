@@ -82,26 +82,28 @@ public class WitchTower
 
 	/**
 	 * Builds the tower at the location provided in the constructor.
+	 * @param replaceByAir Change block even if new one is air
 	 */
-	public void build()
+	public void build(final boolean replaceByAir)
 	{
 		final Location loc = this.location.clone();
 		for(int i=0;i<this.layers.size();i++)
 		{
-			this.layers.get(i).buildAround(loc);
+			this.layers.get(i).build(loc, true);
 			loc.setY(loc.getY() + 1);
 		}
 	}
 
 	/**
 	 * Destroys the tower as if it was built at the location provided in the constructor.
+	 * @param replaceByAir Delete blocks even if corresponding one is air
 	 */
-	public void delete()
+	public void delete(final boolean replaceByAir)
 	{
 		final Location loc = this.location.clone();
 		for(int i=0;i<this.layers.size();i++)
 		{
-			this.layers.get(i).delete(loc);
+			this.layers.get(i).delete(loc, true);
 			loc.setY(loc.getY() + 1);
 		}
 	}

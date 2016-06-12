@@ -96,9 +96,10 @@ public class WitchTowerLayer
 	/**
 	 * Build the layer at the given location.
 	 * @param from Minimum corner where to build the layer
+	 * @param replaceByAir Change block even if corresponding one in layer is air
 	 */
 	@SuppressWarnings("deprecation")
-	public void buildAround(final Location from)
+	public void build(final Location from, final boolean replaceByAir)
 	{
 		final Location loc = from.clone();
 		loc.setX(from.getX() + this.offsetX);
@@ -110,8 +111,11 @@ public class WitchTowerLayer
 				final Block b = loc.getBlock();
 				final MaterialData m = this.blocks[i][j];
 				if(m == null)
-					b.setType(Material.AIR);
-				else
+				{
+					if(replaceByAir)
+						b.setType(Material.AIR);
+				}
+				else if(replaceByAir || m.getItemType() != Material.AIR)
 				{
 					b.setType(m.getItemType());
 					b.setData(m.getData());
@@ -125,10 +129,11 @@ public class WitchTowerLayer
 	/**
 	 * Delete the layer as if it was built at the given location.
 	 * @param from Minimum corner where to delete the layer
+	 * @param replaceByAir Delete block even if corresponding one in layer is air
 	 */
-	public void delete(final Location from)
+	public void delete(final Location from, final boolean replaceByAir)
 	{
-		// pretty much a copy paste from buildAround() function
+		// pretty much a copy paste from build() function
 		final Location loc = from.clone();
 		loc.setX(from.getX() + this.offsetX);
 		for(int i=0;i<this.blocks.length;i++)
@@ -137,7 +142,16 @@ public class WitchTowerLayer
 			for(int j=0;j<this.blocks[i].length;j++)
 			{
 				final Block b = loc.getBlock();
-				b.setType(Material.AIR);
+				final MaterialData m = this.blocks[i][j];
+				if(m == null)
+				{
+					if(replaceByAir)
+						b.setType(Material.AIR);
+				}
+				else if(replaceByAir || m.getItemType() != Material.AIR)
+				{
+					b.setType(Material.AIR);
+				}
 				loc.setZ(loc.getZ() + 1);
 			}
 			loc.setX(loc.getX() + 1);
