@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 
+import fr.dragorn421.witchtower.boss.WitchBoss;
 import fr.dragorn421.witchtower.tower.WitchTowerParameters.Shape;
 import fr.dragorn421.witchtower.util.Util;
 
@@ -14,6 +15,8 @@ public class WitchTower
 	final private Location location;
 	final private WitchTowerParameters params;
 	final private List<WitchTowerLayer> layers;
+
+	private WitchBoss boss;
 
 	/**
 	 * Generates a tower with the given parameters. Won't be actually built unless {@link WitchTower#build()} is called.
@@ -78,6 +81,7 @@ public class WitchTower
 				}
 			}
 		}
+		this.boss = null;
 	}
 
 	/**
@@ -106,6 +110,11 @@ public class WitchTower
 			this.layers.get(i).delete(loc, true);
 			loc.setY(loc.getY() + 1);
 		}
+		if(this.getBoss() != null)
+		{
+			this.boss.remove();
+			this.boss = null;
+		}
 	}
 
 	/**
@@ -114,6 +123,44 @@ public class WitchTower
 	public Location getTop()
 	{
 		return this.layers.get(this.layers.size()-1).getCenter(this.location.clone()).add(0D, this.params.height + 1D, 0D);
+	}
+
+	/**
+	 * @return The parameters of this tower
+	 */
+	public WitchTowerParameters getParameters()
+	{
+		return this.params;
+	}
+
+	/**
+	 * Creates a new boss for this tower, removing the old one if any
+	 * @return The boss of this tower
+	 */
+	public WitchBoss newBoss()
+	{
+		if(this.getBoss() != null)
+			this.boss.remove();
+		return this.boss = new WitchBoss(this, this.getTop());
+	}
+
+	/**
+	 * Returns the boss of this tower, creates one if there is none
+	 * @return The boss of this tower, not null
+	 */
+	public WitchBoss needBoss()
+	{
+		return this.getBoss() == null?this.newBoss():this.boss;
+	}
+
+	/**
+	 * @return The boss of this tower, null if none
+	 */
+	public WitchBoss getBoss()
+	{
+		if(this.boss != null && !this.boss.isValid())
+			this.boss = null;
+		return this.boss;
 	}
 
 }

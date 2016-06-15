@@ -11,7 +11,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import fr.dragorn421.witchtower.boss.WTProjectile;
-import fr.dragorn421.witchtower.boss.WitchBoss;
 import fr.dragorn421.witchtower.tower.WitchTower;
 import fr.dragorn421.witchtower.tower.WitchTowerParameters;
 import fr.dragorn421.witchtower.util.Util;
@@ -38,7 +37,7 @@ public class WitchTowerCommand implements CommandExecutor
 				}
 				p = (Player) sender;
 				wtp = new WTProjectile(p.getLocation());
-				wtp.setFollow(p);
+				wtp.setFollow(p, 1);
 				return true;
 			case "shoot":
 				if(!(sender instanceof Player))
@@ -58,14 +57,14 @@ public class WitchTowerCommand implements CommandExecutor
 				Entity follow = null;
 				for(final Entity e : nearby)
 				{
-					if(e != p)
+					if(e != p)// if player is too close to his targeted block he may not be a target
 						follow = e;
 				}
 				wtp = new WTProjectile(p.getLocation());
 				if(follow == null)
 					wtp.setDirection(p.getLocation().getDirection());
 				else
-					wtp.setFollow(follow);
+					wtp.setFollow(follow, 1);
 				return true;
 			case "tower":
 				if(!(sender instanceof Player))
@@ -92,14 +91,25 @@ public class WitchTowerCommand implements CommandExecutor
 				witchTower.getTop().getBlock().setType(Material.GLOWSTONE);// debug
 				return true;
 			case "witch":
+				if(args.length == 1)
+				{
+					sender.sendMessage("No tower id");
+					return false;
+				}
 				try {
 					id = Integer.parseInt(args[1]);
 				} catch(NumberFormatException e) {
+					sender.sendMessage("Not a valid number");
 					return false;
 				}
 				witchTower = WTManager.get().getTower(id);
-				new WitchBoss(witchTower.getTop());
-				//TODO
+				if(witchTower == null)
+				{
+					sender.sendMessage("Unknown tower id");
+					return true;
+				}
+				witchTower.newBoss();
+				sender.sendMessage("Spawned new boss");
 				return true;
 			}
 		}

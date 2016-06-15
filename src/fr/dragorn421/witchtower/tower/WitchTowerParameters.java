@@ -27,7 +27,7 @@ public class WitchTowerParameters
 	/**
 	 * Default generation parameters
 	 */
-	final static public WitchTowerParameters DEFAULT = new WitchTowerParameters().height(150).baseSize(60).topSize(8).layerNoise(1).shape(Shape.CONCAVE);
+	final static public WitchTowerParameters DEFAULT = new WitchTowerParameters().height(30).baseSize(20).topSize(10).layerNoise(1).shape(Shape.CONCAVE);
 
 	/**
 	 * The number of layers

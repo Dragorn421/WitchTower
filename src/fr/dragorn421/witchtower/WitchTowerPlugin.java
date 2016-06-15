@@ -12,6 +12,7 @@ public class WitchTowerPlugin extends JavaPlugin
 {
 
 	final static public String BLOCK_BELONGS_TO_TOWER = "witchtower_block_in_tower_metadatakey";
+	final static public String BOSS_BELONGS_TO_TOWER = "witchtower_boss_of_tower_metadatakey";
 
 	static private WitchTowerPlugin instance;
 
@@ -33,6 +34,7 @@ public class WitchTowerPlugin extends JavaPlugin
 			}, 0L);
 			throw new IllegalStateException("Unable to load configuration.", e);
 		}
+		System.out.println("" + Bukkit.getServer().getClass().getCanonicalName());
 		//load WTManager class so there is no error on disable if manager wasn't used
 		WTManager.get();
 		Bukkit.getPluginCommand("witchtower").setExecutor(new WitchTowerCommand());

@@ -1,6 +1,8 @@
 package fr.dragorn421.witchtower;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -31,19 +33,22 @@ public class WTListener implements Listener
 	@EventHandler
 	public void onBlockPlace(final BlockPlaceEvent e)
 	{
-		final WitchTower tower = Util.getMetadata(e.getBlock(), WitchTowerPlugin.BLOCK_BELONGS_TO_TOWER, WitchTower.class);
-		if(tower == null)
-			return;
-		e.getPlayer().sendMessage("You are placing disgusting blocks near my beautiful tower! Die!");
+		this.onModify(e.getBlock(), e.getPlayer(), "placing your nasty blocks near");
 	}
 
 	@EventHandler
 	public void onBlockBreak(final BlockBreakEvent e)
 	{
-		final WitchTower tower = Util.getMetadata(e.getBlock(), WitchTowerPlugin.BLOCK_BELONGS_TO_TOWER, WitchTower.class);
+		this.onModify(e.getBlock(), e.getPlayer(), "breaking with your ugly fist");
+	}
+
+	private void onModify(final Block b, final Player p, final String action)
+	{
+		final WitchTower tower = Util.getMetadata(b, WitchTowerPlugin.BLOCK_BELONGS_TO_TOWER, WitchTower.class);
 		if(tower == null)
 			return;
-		e.getPlayer().sendMessage("You are breaking my beautiful tower! Die!");
+		p.sendMessage("You are " + action + " my beautiful tower! Die!");
+		tower.needBoss().addAttack(p);
 	}
 
 }

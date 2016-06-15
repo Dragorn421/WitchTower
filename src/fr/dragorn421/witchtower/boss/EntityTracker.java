@@ -11,39 +11,40 @@ public class EntityTracker
 	private Location loc;
 	private Vector lastDirection;
 	private double sharpTurnFactor;
-	private double stepLength;
+	private double speed;
 
 	/**
 	 * @param target Target entity
 	 * @param start Current location
+	 * @param speed Speed in blocks per next() call
 	 */
-	public EntityTracker(final Entity tracked, final Location start)
+	public EntityTracker(final Entity tracked, final Location start, final double speed)
 	{
-		this(tracked, start, start.getDirection());
+		this(tracked, start, start.getDirection(), speed);
 	}
 
 	/**
 	 * @param target Target entity
 	 * @param start Current location
 	 * @param startDirection Current moving direction
+	 * @param speed Speed in blocks per next() call
 	 */
-	public EntityTracker(final Entity target, final Location start, final Vector startDirection)
+	public EntityTracker(final Entity target, final Location start, final Vector startDirection, final double speed)
 	{
 		this.target = target;
 		this.loc = start.clone();
-		this.lastDirection = startDirection.clone();
+		this.lastDirection = startDirection.clone().normalize().multiply(speed);
 		this.sharpTurnFactor = 0.1;// [0;1]
-		// stepLength is used to have consistent move length
-		this.stepLength = this.lastDirection.length();
+		this.speed = speed;
 		this.loc.add(this.lastDirection);
 	}
 
 	/**
-	 * @return Distance between current location and target
+	 * @return Squared distance between current location and target
 	 */
-	public double getDistanceLeft()
+	public double getDistanceSquaredLeft()
 	{
-		return this.target.getLocation().toVector().subtract(this.loc.toVector()).length();
+		return this.target.getLocation().toVector().subtract(this.loc.toVector()).lengthSquared();
 	}
 
 	/**
@@ -55,13 +56,20 @@ public class EntityTracker
 		final Location to = this.target.getLocation().clone();
 		// distance to go before reaching the target
 		final Vector direct = to.subtract(this.loc).toVector();
-		//System.out.println("stepLength=" + this.stepLength + ",direct=" + direct + ",direct.length()=" + direct.length());
-		// keeps moves consistent
-		direct.normalize().multiply(this.stepLength);
+		// speed is in blocks per next() call, make length of direct equal to speed
+		direct.normalize().multiply(this.speed);
 		// alter old direction with new one, more or less depending on sharpTurnFactor value
 		this.lastDirection.multiply(1 - this.sharpTurnFactor).add(direct.multiply(this.sharpTurnFactor));
 		this.loc.add(this.lastDirection);
 		return this.lastDirection;
+	}
+
+	/**
+	 * @param speed The new speed in blocks per next() call
+	 */
+	public void setSpeed(final double speed)
+	{
+		this.speed = speed;
 	}
 
 }

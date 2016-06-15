@@ -1,5 +1,7 @@
 package fr.dragorn421.witchtower.boss;
 
+import java.util.Observable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,7 +15,7 @@ import org.bukkit.util.Vector;
 import fr.dragorn421.witchtower.WitchTowerPlugin;
 import fr.dragorn421.witchtower.util.Util;
 
-public class WTProjectile
+public class WTProjectile extends Observable
 {
 
 	private ArmorStand display[];
@@ -38,9 +40,10 @@ public class WTProjectile
 				i==0?0:Math.toRadians(120),// first one stays on top, others below
 				i*Math.toRadians(120),// spread last three armor stands around the first one
 				0));
+			as.setCollidable(false);
 			as.setGravity(false);
-			as.setVisible(false);
 			as.setInvulnerable(true);
+			as.setVisible(false);
 			this.display[i] = as;
 		}
 		// tick every tick
@@ -57,11 +60,11 @@ public class WTProjectile
 	private void tick()
 	{
 		// all armor stands have the same location
-		final Location loc = this.display[0].getLocation();
+		Location loc = this.display[0].getLocation();
 		// if block is not air or tracked entity is close enough
-		if(!loc.getBlock().isEmpty() || (this.tracker != null && this.tracker.getDistanceLeft() < 0.5))
+		if(!loc.getBlock().isEmpty() || (this.tracker != null && this.tracker.getDistanceSquaredLeft() < 0.25))
 		{
-			loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 5f, false, true);
+			loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 1f, false, false);
 			//loc.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, loc, 1);
 			this.remove();
 			return;
@@ -77,12 +80,18 @@ public class WTProjectile
 				0,
 				Math.toRadians(5),
 				Math.toRadians(5)));
-			as.teleport(as.getLocation(loc).add(this.direction));
+			loc = as.getLocation(loc).add(this.direction);
+			if(!loc.getChunk().isLoaded())
+			{
+				this.remove();
+				break;
+			}
+			as.teleport(loc);
 		}
 	}
 
 	/**
-	 * Removes this projectile, removes all armor stands.
+	 * Removes this projectile, removes all armor stands. Notifies observers.
 	 */
 	public void remove()
 	{
@@ -91,6 +100,8 @@ public class WTProjectile
 		this.display = null;
 		this.task.cancel();
 		this.task = null;
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -105,13 +116,23 @@ public class WTProjectile
 	/**
 	 * Makes this projectile follow an entity.
 	 * @param follow The entity to follow. null to not follow
+	 * @param speed The speed in blocks per tick
 	 */
-	public void setFollow(final Entity follow)
+	public void setFollow(final Entity follow, final double speed)
 	{
 		if(follow == null)
 			this.tracker = null;
 		else
-			this.tracker = new EntityTracker(follow, this.display[0].getLocation());
+			this.tracker = new EntityTracker(follow, this.display[0].getLocation(), speed);
+	}
+
+	/**
+	 * A projectile is valid as long as the {@link WTProjectile#remove()} method is not called.
+	 * @return true if this projectile is valid
+	 */
+	public boolean isValid()
+	{
+		return this.task != null;
 	}
 
 }
