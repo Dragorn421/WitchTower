@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.material.MaterialData;
 
 import fr.dragorn421.witchtower.WitchTowerPlugin;
+import fr.dragorn421.witchtower.parameters.WTParameters;
 import fr.dragorn421.witchtower.util.Util;
 
 public class WitchTowerLayer
@@ -22,7 +23,7 @@ public class WitchTowerLayer
 	 * @param offsetZ
 	 * @param params Generation parameters
 	 */
-	public WitchTowerLayer(final double offsetX, final double offsetZ, final WitchTowerParameters params)
+	public WitchTowerLayer(final double offsetX, final double offsetZ, final WTParameters params)
 	{
 		this(offsetX, offsetZ, WitchTowerLayer.genLayer(params));
 	}
@@ -67,7 +68,7 @@ public class WitchTowerLayer
 	 * @param erodeFactor How much to scale down the current layer (between 0 and 1 inclusive)
 	 * @return The new layer
 	 */
-	public WitchTowerLayer next(final WitchTowerParameters params, final double erodeFactor)
+	public WitchTowerLayer next(final WTParameters params, final double erodeFactor)
 	{
 		final MaterialData[][] layer = new MaterialData[this.blocks.length][this.blocks[0].length];
 		// x and z offsets are used so that the old layer and the new one have the same center
@@ -191,7 +192,7 @@ public class WitchTowerLayer
 
 	//TODO redo basic layer generation, too square in some cases
 
-	static private MaterialData[][] genLayer(final WitchTowerParameters params)
+	static private MaterialData[][] genLayer(final WTParameters params)
 	{
 		final MaterialData[][] layer = new MaterialData[params.baseSize][params.baseSize];
 		for(int i=0;i<layer.length;i++)//(debug) fill with default block

@@ -2,6 +2,7 @@ package fr.dragorn421.witchtower;
 
 import java.util.Collection;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -11,8 +12,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import fr.dragorn421.witchtower.boss.WTProjectile;
+import fr.dragorn421.witchtower.parameters.ParameterType;
+import fr.dragorn421.witchtower.parameters.WTParameters;
 import fr.dragorn421.witchtower.tower.WitchTower;
-import fr.dragorn421.witchtower.tower.WitchTowerParameters;
 import fr.dragorn421.witchtower.util.Util;
 
 public class WitchTowerCommand implements CommandExecutor
@@ -23,12 +25,41 @@ public class WitchTowerCommand implements CommandExecutor
 		if(args.length != 0)
 		{
 			final Player p;
+			final WTParameters params;
 			final Location loc;
 			final WTProjectile wtp;
 			final WitchTower witchTower;
 			final int id;
 			switch(args[0].toLowerCase())
 			{
+			case "params":
+				if(!(sender instanceof Player))
+				{
+					sender.sendMessage("Players only");
+					return true;
+				}
+				p = (Player) sender;
+				params = WTManager.get().getCustomParameters(p);
+				if(args.length == 3)
+				{
+					try {
+						final ParameterType param = ParameterType.valueOf(args[1].toUpperCase());
+						if(param.set(params, args[2]))
+							p.sendMessage(ChatColor.GREEN.toString() + "New parameter value:");
+						else
+							p.sendMessage(ChatColor.RED.toString() + "Parameter value didn't change:");
+						p.sendMessage(param.name() + ": " + param.get(params));
+						return true;
+					} catch(final IllegalArgumentException e) {
+						p.sendMessage(ChatColor.RED.toString() + "Unknown parameter " + args[1]);
+					}
+				}
+				p.sendMessage(ChatColor.BLUE.toString() + "Your custom parameters are:");
+				for(final ParameterType param : ParameterType.values())
+				{
+					p.sendMessage(param.name() + ": " + param.get(params));
+				}
+				return true;
 			case "projectile":
 				if(!(sender instanceof Player))
 				{
@@ -79,7 +110,7 @@ public class WitchTowerCommand implements CommandExecutor
 					p.sendMessage("You need to look at a block");
 					return true;
 				}
-				final WitchTowerParameters params = WitchTowerParameters.DEFAULT;//TODO allow custom parameters
+				params = WTManager.get().getCustomParameters(p);
 				// so that the tower center is at the pointed block
 				loc.add(-params.baseSize/2D, 1D, -params.baseSize/2D);
 				final long start = System.nanoTime();

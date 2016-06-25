@@ -6,14 +6,15 @@ import java.util.List;
 import org.bukkit.Location;
 
 import fr.dragorn421.witchtower.boss.WitchBoss;
-import fr.dragorn421.witchtower.tower.WitchTowerParameters.Shape;
+import fr.dragorn421.witchtower.parameters.WTParameters;
+import fr.dragorn421.witchtower.parameters.WTParameters.Shape;
 import fr.dragorn421.witchtower.util.Util;
 
 public class WitchTower
 {
 
 	final private Location location;
-	final private WitchTowerParameters params;
+	final private WTParameters params;
 	final private List<WitchTowerLayer> layers;
 
 	private WitchBoss boss;
@@ -24,7 +25,7 @@ public class WitchTower
 	 * @param params The generation parameters
 	 * @param independentLayerGeneration Generate each layer independently rather than scaling down the first one
 	 */
-	public WitchTower(final Location location, final WitchTowerParameters params, final boolean independentLayerGeneration)
+	public WitchTower(final Location location, final WTParameters params, final boolean independentLayerGeneration)
 	{
 		this.location = location;
 		this.params = params;
@@ -128,7 +129,7 @@ public class WitchTower
 	/**
 	 * @return The parameters of this tower
 	 */
-	public WitchTowerParameters getParameters()
+	public WTParameters getParameters()
 	{
 		return this.params;
 	}
