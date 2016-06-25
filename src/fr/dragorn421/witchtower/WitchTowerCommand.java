@@ -1,13 +1,18 @@
 package fr.dragorn421.witchtower;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -17,11 +22,19 @@ import fr.dragorn421.witchtower.parameters.WTParameters;
 import fr.dragorn421.witchtower.tower.WitchTower;
 import fr.dragorn421.witchtower.util.Util;
 
-public class WitchTowerCommand implements CommandExecutor
+public class WitchTowerCommand implements CommandExecutor, TabCompleter
 {
 
+	public void register()
+	{
+		final PluginCommand cmd = Bukkit.getPluginCommand("witchtower");
+		cmd.setExecutor(this);
+		cmd.setTabCompleter(this);
+	}
+
 	@Override
-	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String args[]) {
+	public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String args[])
+	{
 		if(args.length != 0)
 		{
 			final Player p;
@@ -145,6 +158,24 @@ public class WitchTowerCommand implements CommandExecutor
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias, final String[] args)
+	{
+		if(args.length > 1)
+		{
+			switch(args[0].toLowerCase())
+			{
+			case "params":
+				if(args.length == 2)
+					return Util.complete(args[1], ParameterType.getParameterNames());
+			// FALL-THROUGH
+			default:
+				return Collections.emptyList();
+			}
+		}
+		return Util.complete(args[0], "params", "projectile", "shoot", "tower", "witch");
 	}
 
 }

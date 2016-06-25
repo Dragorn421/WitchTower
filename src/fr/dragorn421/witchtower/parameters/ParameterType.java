@@ -1,5 +1,9 @@
 package fr.dragorn421.witchtower.parameters;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import fr.dragorn421.witchtower.parameters.WTParameters.Shape;
 
 public enum ParameterType
@@ -108,8 +112,21 @@ public enum ParameterType
 		}
 	};
 
+	final static private List<String> parameterNames = new ArrayList<>();
+	final static private List<String> parameterNamesView = Collections.unmodifiableList(ParameterType.parameterNames);
+
+	static {
+		for(final ParameterType pt : ParameterType.values())
+			ParameterType.parameterNames.add(pt.name().toLowerCase());
+	}
+
 	abstract public String get(final WTParameters params);
 
 	abstract public boolean set(final WTParameters params, final String value);
+
+	static public List<String> getParameterNames()
+	{
+		return ParameterType.parameterNamesView;
+	}
 
 }

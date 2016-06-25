@@ -37,7 +37,7 @@ public class WitchTowerPlugin extends JavaPlugin
 		System.out.println("" + Bukkit.getServer().getClass().getCanonicalName());
 		//load WTManager class so there is no error on disable if manager wasn't used
 		WTManager.get();
-		Bukkit.getPluginCommand("witchtower").setExecutor(new WitchTowerCommand());
+		new WitchTowerCommand().register();
 		Bukkit.getPluginManager().registerEvents(new WTListener(), this);
 		super.getLogger().info(super.getName() + " enabled!");
 	}

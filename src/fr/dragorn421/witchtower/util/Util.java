@@ -1,6 +1,7 @@
 package fr.dragorn421.witchtower.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -66,6 +67,37 @@ public class Util
 			to.removeMetadata(key, WitchTowerPlugin.get());
 		else
 			to.setMetadata(key, new FixedMetadataValue(WitchTowerPlugin.get(), value));
+	}
+
+	/**
+	 * Returns the possibilities strings that start with arg.<br>
+	 * arg and each possibilities string will be toLowerCase()'d
+	 * @param arg The start to match
+	 * @param possibilities The list of strings to check
+	 * @return The list of matching strings
+	 */
+	final static public List<String> complete(String arg, final String...possibilities)
+	{
+		arg = arg.toLowerCase();
+		final List<String> list = new ArrayList<String>(possibilities.length);
+		for(final String s : possibilities)
+			if(s.toLowerCase().startsWith(arg))
+				list.add(s);
+		return list;
+	}
+
+	/**
+	 * Same as {@link Util#complete(String, String...)} using a Collection as possibilities.
+	 * @see Util#complete(String, String...)
+	 */
+	final static public List<String> complete(String arg, final Collection<String> possibilities)
+	{
+		arg = arg.toLowerCase();
+		final List<String> list = new ArrayList<String>(possibilities.size());
+		for(final String s : possibilities)
+			if(s.toLowerCase().startsWith(arg))
+				list.add(s);
+		return list;
 	}
 
 	static private List<String> filterOut = new ArrayList<>();
